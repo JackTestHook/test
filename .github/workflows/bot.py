@@ -50,6 +50,8 @@ if __name__ == "__main__":
             matched = True
             msg = action.action(req)
             break
+        
+    logging.info(msg)
     
     if not matched:
         logging.info("No action matched")

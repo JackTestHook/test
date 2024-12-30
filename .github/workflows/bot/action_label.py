@@ -22,6 +22,7 @@ class ActionLabel(Action):
         for label_action in ALL_LABEL_ACTIONS:
             __label_action = label_action()
             if __label_action.isMatched(request):
+                print("run?")
                 __label_action.action(request)
             
         return "labeled related actions succeed"
