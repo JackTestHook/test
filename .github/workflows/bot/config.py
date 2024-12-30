@@ -64,3 +64,5 @@ def settings():
         'Authorization': f'Bearer {config("github_token")}',
         'Content-Type': 'application/json'
     })
+
+settings()

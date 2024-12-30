@@ -27,7 +27,9 @@ if __name__ == "__main__":
     settings()
     request = sys.argv[1]
     
+    print("------------")
     print(BACKPORT_LABEL_KEY)
+    print("------------")
     
     try:
         req = json.loads(request)
