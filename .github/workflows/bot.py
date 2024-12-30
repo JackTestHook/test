@@ -41,7 +41,7 @@ if __name__ == "__main__":
     if event_type == "":
         sys.exit(0)
         
-    print(req.get('action'))
+    print(req.get('action'), event_type)
     
     action_request = ActionRequest(req.get('action'), event_type)
     matched = False
