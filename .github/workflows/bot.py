@@ -1,7 +1,7 @@
 import sys
 import json
 import logging
-from bot.config import settings
+from bot.config import settings, BACKPORT_LABEL_KEY
 from bot.action import ActionRequest
 from bot.action_label import ActionLabel
 from bot.action_project import ActionProject
@@ -26,6 +26,8 @@ logging.basicConfig(
 if __name__ == "__main__":
     settings()
     request = sys.argv[1]
+    
+    print(BACKPORT_LABEL_KEY)
     
     try:
         req = json.loads(request)
