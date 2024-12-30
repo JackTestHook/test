@@ -17,14 +17,14 @@ SUPPORTED_EVENT = [
     "issue"
 ]
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S", 
+)
+
 if __name__ == "__main__":
     settings()
-    logging.basicConfig(
-        level=logging.ERROR,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S", 
-    )
-
     request = sys.argv[1]
     
     try:
