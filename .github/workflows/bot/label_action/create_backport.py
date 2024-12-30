@@ -21,7 +21,9 @@ class CreateBackport(LabelAction):
         print(request['issue']['labels'])
         for label in request['issue']['labels']:
             if re.match(backport_label_pattern, label['name']) is not None:
+                print("matched")
                 return True
+        print("no-matched")
         return False
                     
     def action(self, request):
