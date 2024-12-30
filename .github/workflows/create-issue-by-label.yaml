@@ -4,20 +4,19 @@ on:
   issues:
     types: [ labeled ]
 
-env:
-  EVENT: ${{ toJson(github.event) }}
-  GITHUB_OWNER: JackTestHook
-  GITHUB_MAIN_REPOSITORY: test
-  GITHUB_PROJECT_NUMBER: "1"
-  E2E_PIPELINE: "Review,Ready For Test,Testing"
-  GITHUB_REPOSITORY_TEST: test
-  GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-
 jobs:
-  create-backport-issue:
-    name: Create Backport Issue
+  create-issue:
+    name: Create Issue
     if: contains(github.event.label.name, 'backport-needed/')
     runs-on: ubuntu-latest
+    env:
+      EVENT: ${{ toJson(github.event) }}
+      GITHUB_OWNER: JackTestHook
+      GITHUB_MAIN_REPOSITORY: test
+      GITHUB_PROJECT_NUMBER: "1"
+      E2E_PIPELINE: "Review,Ready For Test,Testing"
+      GITHUB_REPOSITORY_TEST: test
+      GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -26,22 +25,12 @@ jobs:
         run: |
           pip install -r .github/workflows/bot/requirements.txt
 
-      - name: Create
+      - name: Create Backport Issue
+        if: contains(github.event.label.name, 'backport-needed/')
         run: |
           python .github/workflows/bot.py "$EVENT"
-
-  create-gui-issue:
-    name: Create GUI Issue
-    if: contains(github.event.label.name, 'require-ui/')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      
-      - name: Install
-        run: |
-          pip install -r .github/workflows/bot/requirements.txt
       
       - name: Create GUI Issue
+        if: contains(github.event.label.name, 'require-ui/')
         run: |
-          python .github/workflows/bot.py "$EVENT"
+          python .github/workflows/bot.py "$EVENT"z
