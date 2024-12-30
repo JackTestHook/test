@@ -18,8 +18,8 @@ class CreateBackport(LabelAction):
         pass
     
     def isMatched(self, request):
-        print(request['issue']['labels'])
         for label in request['issue']['labels']:
+            print(label['name'])
             if re.match(backport_label_pattern, label['name']) is not None:
                 print("matched")
                 return True
