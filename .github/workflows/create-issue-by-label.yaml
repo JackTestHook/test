@@ -33,4 +33,4 @@ jobs:
       - name: Create GUI Issue
         if: contains(github.event.label.name, 'require-ui/')
         run: |
-          python .github/workflows/bot.py "$EVENT"z
+          python .github/workflows/bot.py "$EVENT"
