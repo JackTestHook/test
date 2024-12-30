@@ -34,7 +34,6 @@ if __name__ == "__main__":
         sys.exit(1)
     
     for event in SUPPORTED_EVENT:
-        print(req.get(event))
         if req.get(event) is not None:
             event_type = event
     
