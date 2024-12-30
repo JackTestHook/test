@@ -22,11 +22,11 @@ class IssueTransfer:
         found = False
         for comment in self.__comments:
             if comment.body.strip().startswith('## Pre Ready-For-Testing Checklist'):
-                logging.debug('pre-merged checklist already exists, not creating a new one')
+                logging.info('pre-merged checklist already exists, not creating a new one')
                 found = True
                 break
         if not found:
-            logging.debug('pre-merge checklist does not exist, creating a new one')
+            logging.info('pre-merge checklist does not exist, creating a new one')
             self.__issue.create_comment(render_template('pre-merge.md'))
 
     def create_e2e_issue(self):
@@ -40,11 +40,11 @@ class IssueTransfer:
             found = False
             for comment in self.__comments:
                 if comment.body.startswith('Automation e2e test issue:'):
-                    logging.debug('Automation e2e test issue already exists, not creating a new one')
+                    logging.info('Automation e2e test issue already exists, not creating a new one')
                     found = True
                     break
             if not found:
-                logging.debug('Automation e2e test issue does not exist, creating a new one')
+                logging.info('Automation e2e test issue does not exist, creating a new one')
 
                 issue_link = '{}/{}#{}'.format(GITHUB_OWNER, GITHUB_REPOSITORY, self.__issue.number)
                 issue_test_title = '[e2e] {}'.format(self.__issue.title)
@@ -59,4 +59,4 @@ class IssueTransfer:
                 # link test issue in Harvester issue
                 self.__issue.create_comment('Automation e2e test issue: {}'.format(issue_test_link))
         else:
-            logging.debug('label require/automation-e2e does not exists, not creating test issue')
+            logging.info('label require/automation-e2e does not exists, not creating test issue')

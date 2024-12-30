@@ -1,11 +1,11 @@
 import re, logging
-from bot import repo
+from bot import repo, BACKPORT_LABEL_KEY
 from bot.exception import CustomException, ExistedBackportComment
 from bot.label_action.create_gui_issue import CREATE_GUI_ISSUE_LABEL
 from bot.action import LabelAction
 
 # check the issue's include backport-needed/(1.0.3|v1.0.3|v1.0.3-rc0) label
-backport_label_pattern = r'^%s\/[\w0-9\.]+' % "backport-needed"
+backport_label_pattern = r'^%s\/[\w0-9\.]+' % BACKPORT_LABEL_KEY
 
 
 # link: https://github.com/harvester/harvester/issues/2324
@@ -19,13 +19,8 @@ class CreateBackport(LabelAction):
     
     def isMatched(self, request):
         for label in request['issue']['labels']:
-            print(label['name'])
-            print(backport_label_pattern)
-            print(re.match(backport_label_pattern, label['name']))
             if re.match(backport_label_pattern, label['name']) is not None:
-                print("matched")
                 return True
-        print("no-matched")
         return False
                     
     def action(self, request):
@@ -43,7 +38,7 @@ class CreateBackport(LabelAction):
         msg = []
         for backport_label in backport_labels:
             try:
-                logging.debug(f"issue number {request['issue']['number']} start to create backport with labels {backport_label['name']}")
+                logging.info(f"issue number {request['issue']['number']} start to create backport with labels {backport_label['name']}")
                 
                 bp = Backport(request['issue']['number'], normal_labels, backport_label)
                 bp.verify()
@@ -51,7 +46,7 @@ class CreateBackport(LabelAction):
                 bp.create_comment()
                 msg.append("create backport issue success")
             except ExistedBackportComment as e:
-                logging.debug(f"issue number {request['issue']['number']} had created backport with labels {backport_label['name']}")
+                logging.info(f"issue number {request['issue']['number']} had created backport with labels {backport_label['name']}")
             except CustomException as e:
                 logging.exception(f"Custom exception : {str(e)}")
             except Exception as e:

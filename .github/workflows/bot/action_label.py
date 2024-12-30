@@ -12,10 +12,6 @@ class ActionLabel(Action):
         pass
     
     def isMatched(self, actionRequest):
-        print("========")
-        print(actionRequest.event_type)
-        print(actionRequest.action)
-        print("========")
         if actionRequest.event_type not in ['issue']:
             return False
         if actionRequest.action not in ['labeled']:
@@ -23,12 +19,16 @@ class ActionLabel(Action):
         return True
     
     def action(self, request):
+        run = False
+        
         for label_action in ALL_LABEL_ACTIONS:
             __label_action = label_action()
             if __label_action.isMatched(request):
-                print("run?")
-                a = __label_action.action(request)
-                print(a)
-            
+                run = True
+                __label_action.action(request)
+
+        if not run:
+            return "No label action matched"
+        
         return "labeled related actions succeed"
 

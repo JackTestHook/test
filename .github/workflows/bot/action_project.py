@@ -32,7 +32,7 @@ class ActionProject(Action):
         
         target_column = request['changes']['field_value']['to']
         if target_column["name"] not in E2E_PIPELINE.split(","):
-            logging.debug('target_column is {}, ignoring'.format(target_column["name"]))
+            logging.info('target_column is {}, ignoring'.format(target_column["name"]))
             return
         
         issue_node_id = request[self.__event_type_key]['content_node_id']

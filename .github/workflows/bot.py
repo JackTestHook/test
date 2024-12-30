@@ -18,7 +18,7 @@ SUPPORTED_EVENT = [
 ]
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S", 
 )
@@ -27,14 +27,10 @@ if __name__ == "__main__":
     settings()
     request = sys.argv[1]
     
-    print("------------")
-    print(BACKPORT_LABEL_KEY)
-    print("------------")
-    
     try:
         req = json.loads(request)
     except json.JSONDecodeError as e:
-        logging.debug("Failed to parse JSON:", e)
+        logging.error("Failed to parse JSON:", e)
         sys.exit(1)
     
     for event in SUPPORTED_EVENT:
@@ -43,8 +39,6 @@ if __name__ == "__main__":
     
     if event_type == "":
         sys.exit(0)
-        
-    print(req.get('action'), event_type)
     
     action_request = ActionRequest(req.get('action'), event_type)
     matched = False
@@ -56,7 +50,6 @@ if __name__ == "__main__":
             break
         
     logging.info(msg)
-    print(msg)
     
     if not matched:
         logging.info("No action matched")
