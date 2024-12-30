@@ -52,6 +52,7 @@ if __name__ == "__main__":
             break
         
     logging.info(msg)
+    print(msg)
     
     if not matched:
         logging.info("No action matched")
