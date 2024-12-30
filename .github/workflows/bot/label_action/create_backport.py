@@ -1,11 +1,11 @@
 import re, logging
-from bot import repo, BACKPORT_LABEL_KEY
+from bot import repo
 from bot.exception import CustomException, ExistedBackportComment
 from bot.label_action.create_gui_issue import CREATE_GUI_ISSUE_LABEL
 from bot.action import LabelAction
 
 # check the issue's include backport-needed/(1.0.3|v1.0.3|v1.0.3-rc0) label
-backport_label_pattern = r'^%s\/[\w0-9\.]+' % BACKPORT_LABEL_KEY
+backport_label_pattern = r'^%s\/[\w0-9\.]+' % "backport-needed"
 
 
 # link: https://github.com/harvester/harvester/issues/2324
