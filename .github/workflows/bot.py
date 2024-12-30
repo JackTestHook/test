@@ -34,12 +34,15 @@ if __name__ == "__main__":
         sys.exit(1)
     
     for event in SUPPORTED_EVENT:
+        print(req.get(event))
         if req.get(event) is not None:
             event_type = event
     
     if event_type == "":
         sys.exit(0)
         
+    print(req.get('action'))
+    
     action_request = ActionRequest(req.get('action'), event_type)
     matched = False
     
