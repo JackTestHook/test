@@ -27,7 +27,7 @@ class ActionLabel(Action):
             __label_action = label_action()
             if __label_action.isMatched(request):
                 matched = True
-                time.sleep(random.uniform(0.5, 2.0)) # jitter 
+                time.sleep(1 + random.uniform(0.5, 1.5)) # jitter 
                 __label_action.action(request)
 
         if not matched:
