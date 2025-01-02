@@ -1,3 +1,5 @@
+import time
+import random
 from bot.label_action.create_gui_issue import CreateGUIIssue
 from bot.label_action.create_backport import CreateBackport
 from bot.action import Action
@@ -19,15 +21,16 @@ class ActionLabel(Action):
         return True
     
     def action(self, request):
-        run = False
+        matched = False
         
         for label_action in ALL_LABEL_ACTIONS:
             __label_action = label_action()
             if __label_action.isMatched(request):
-                run = True
+                matched = True
+                time.sleep(random.uniform(0.5, 2.0)) # jitter 
                 __label_action.action(request)
 
-        if not run:
+        if not matched:
             return "No label action matched"
         
         return "labeled related actions succeed"
