@@ -11,7 +11,7 @@ concurrency:
 jobs:
   create-issue:
     name: Create Issue
-    if: contains(github.event.issue.labels.*.name, 'backport-needed/') || contains(github.event.issue.labels.*.name, 'require-ui/')
+    # if: contains(github.event.issue.labels.*.name, 'backport-needed/') || contains(github.event.issue.labels.*.name, 'require-ui/')
     runs-on: ubuntu-latest
     env:
       EVENT: ${{ toJson(github.event) }}
@@ -24,6 +24,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+      
+      - name: Test
+        run: |
+          echo ${{ github.event.issue.labels.*.name }}
       
       - name: Install
         run: |
