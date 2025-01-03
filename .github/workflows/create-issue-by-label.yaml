@@ -29,6 +29,9 @@ jobs:
         run: |
           echo ${{ contains(github.event.issue.labels.*.name, 'backport-needed/') }}
           echo ${{ contains(github.event.issue.labels.*.name, 'backport-needed') }}
+          echo ${{ join(github.event.issue.labels.*.name, ', ') }}
+          echo ${{ contains(join(github.event.issue.labels.*.name, ', '), 'backport-needed') }}
+          echo ${{ contains(join(github.event.issue.labels.*.name, ', '), 'backport-needed/') }}
           echo "$EVENT"
       
       - name: Install
