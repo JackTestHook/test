@@ -4,8 +4,12 @@ on:
   issues:
     types: [ labeled ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
 jobs:
-  create-backport-issue:
+  create-issue:
     name: Create Issue  
     if: contains(github.event.label.name, 'backport-needed/') || contains(github.event.label.name, 'require-ui/')
     runs-on: ubuntu-latest
