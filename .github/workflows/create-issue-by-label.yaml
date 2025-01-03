@@ -11,7 +11,7 @@ concurrency:
 jobs:
   create-issue:
     name: Create Issue
-    # if: contains(github.event.issue.labels.*.name, 'backport-needed/') || contains(github.event.issue.labels.*.name, 'require-ui/')
+    if: contains(join(github.event.issue.labels.*.name, ', '), 'backport-needed/') || contains(join(github.event.issue.labels.*.name, ', '), 'require-ui/')
     runs-on: ubuntu-latest
     env:
       EVENT: ${{ toJson(github.event) }}
@@ -25,25 +25,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       
-      - name: Test
-        run: |
-          echo ${{ contains(github.event.issue.labels.*.name, 'backport-needed/') }}
-          echo ${{ contains(github.event.issue.labels.*.name, 'backport-needed') }}
-          echo ${{ join(github.event.issue.labels.*.name, ', ') }}
-          echo ${{ contains(join(github.event.issue.labels.*.name, ', '), 'backport-needed') }}
-          echo ${{ contains(join(github.event.issue.labels.*.name, ', '), 'backport-needed/') }}
-          echo "$EVENT"
-      
       - name: Install
         run: |
           pip install -r .github/workflows/bot/requirements.txt
 
       - name: Create Backport Issue
-        if: contains(github.event.issue.labels.*.name, 'backport-needed/')
+        if: contains(join(github.event.issue.labels.*.name, ', '), 'backport-needed/')
         run: |
           python .github/workflows/bot.py "$EVENT"
       
       - name: Create GUI Issue
-        if: contains(github.event.issue.labels.*.name, 'require-ui/')
+        if: contains(join(github.event.issue.labels.*.name, ', '), 'require-ui/')
         run: |
           python .github/workflows/bot.py "$EVENT"
