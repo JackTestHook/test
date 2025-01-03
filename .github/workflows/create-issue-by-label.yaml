@@ -29,6 +29,7 @@ jobs:
         run: |
           echo ${{ contains(github.event.issue.labels.*.name, 'backport-needed/') }}
           echo ${{ contains(github.event.issue.labels.*.name, 'backport-needed') }}
+          echo ${{ toJson(github.event.issue.labels.*.name) }}
       
       - name: Install
         run: |
