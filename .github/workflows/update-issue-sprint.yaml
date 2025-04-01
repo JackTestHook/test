@@ -25,7 +25,6 @@ jobs:
 
       - name: Harvester Sprint Issues - Clear Sprint
         uses: harvester/move-to-next-iteration@master
-        if: steps.check_sprint_build_required.outcome == 'success'
         with:
           owner: JackTestHook
           number: 1
@@ -37,7 +36,6 @@ jobs:
 
       - name: Harvester Sprint Issues - Move to Next Sprint
         uses: harvester/move-to-next-iteration@master
-        if: steps.check_sprint_build_required.outcome == 'success'
         with:
           owner: JackTestHook
           number: 1
