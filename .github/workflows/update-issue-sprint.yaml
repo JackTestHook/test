@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Harvester Sprint Issues - Clear Sprint
-        uses: Yu-Jack/move-to-next-iteration@master
+        uses: derekbit/move-to-next-iteration@master
         with:
           owner: JackTestHook
           number: 1
@@ -35,7 +35,7 @@ jobs:
           excluded-statuses: "Review,Ready For Testing,Testing,Closed"
 
       - name: Harvester Sprint Issues - Move to Next Sprint
-        uses: Yu-Jack/move-to-next-iteration@master
+        uses: derekbit/move-to-next-iteration@master
         with:
           owner: JackTestHook
           number: 1
