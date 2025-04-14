@@ -158,14 +158,10 @@ jobs:
         steps.fields.outcome == 'success' &&
         env.field-values != '' &&
         startsWith(env.field-values, 'Resolved') &&
-        steps.issue.outputs.data.milestone == ''
+        github.event.issue.milestone != null
         }}
       env:
         GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
       run: |
-        echo "steps.issue.outputs.data.milestone: ${{ steps.issue.outputs.data.milestone }}"
-        # milestone is object, need to print all object
-        echo "github.event.issue.milestone: ${{ toJSON(github.event.issue.milestone) }}"
-        
         ISSUE_NUMBER="${{ github.event.issue.number }}"
         gh issue edit "$ISSUE_NUMBER" --milestone "Planning"
