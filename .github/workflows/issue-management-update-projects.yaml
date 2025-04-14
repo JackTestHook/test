@@ -164,6 +164,8 @@ jobs:
         GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
       run: |
         echo "steps.issue.outputs.data.milestone: ${{ steps.issue.outputs.data.milestone }}"
-        echo "github.event.issue.milestone: ${{ github.event.issue.milestone }}"
+        # milestone is object, need to print all object
+        echo "steps.issue.outputs.data.milestone: ${{ toJSON(steps.issue.outputs.data.milestone) }}"
+        
         ISSUE_NUMBER="${{ github.event.issue.number }}"
         gh issue edit "$ISSUE_NUMBER" --milestone "Planning"
