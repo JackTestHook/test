@@ -158,7 +158,7 @@ jobs:
         steps.fields.outcome == 'success' &&
         env.field-values != '' &&
         startsWith(env.field-values, 'Resolved') &&
-        github.event.issue.milestone != null
+        github.event.issue.milestone == null
         }}
       env:
         GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
