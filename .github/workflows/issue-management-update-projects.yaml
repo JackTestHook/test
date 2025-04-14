@@ -44,7 +44,7 @@ jobs:
         fields: Status
         github_token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
         project_url: ${{ env.COMMUNITY_SPRINT_PROJECT_URL }}
-        resource_url: https://github.com/harvester/harvester/issues/${{ github.event.issue.number }}
+        resource_url: https://github.com/JackTestHook/test/issues/${{ github.event.issue.number }}
 
     - run: echo ${{ steps.fields.outputs.values }}
 
