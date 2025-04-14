@@ -1,4 +1,4 @@
-name: Update-Issue-Sprint
+name: "[Issue Management] Periodic Issue Sprint Update"
 
 on:
   schedule:
@@ -25,6 +25,7 @@ jobs:
 
       - name: Harvester Sprint Issues - Clear Sprint
         uses: rancher/gh-issue-mgr/move-to-next-iteration@main
+        if: steps.check_sprint_build_required.outcome == 'success'
         with:
           owner: JackTestHook
           number: 1
@@ -36,6 +37,7 @@ jobs:
 
       - name: Harvester Sprint Issues - Move to Next Sprint
         uses: rancher/gh-issue-mgr/move-to-next-iteration@main
+        if: steps.check_sprint_build_required.outcome == 'success'
         with:
           owner: JackTestHook
           number: 1
@@ -45,24 +47,24 @@ jobs:
           new-iteration: next
           statuses: "Review"
 
-      # - name: Harvester Community Sprint issues - Move to Next Sprint
-      #   uses: harvester/move-to-next-iteration@master
-      #   if: steps.check_sprint_build_required.outcome == 'success'
-      #   with:
-      #     owner: harvester
-      #     number: 10
-      #     token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-      #     iteration-field: Sprint
-      #     iteration: current
-      #     new-iteration: next
-      #     statuses: 'New'
+      - name: Harvester Community Sprint issues - Move to Next Sprint
+        uses: rancher/gh-issue-mgr/move-to-next-iteration@main
+        if: steps.check_sprint_build_required.outcome == 'success'
+        with:
+          owner: JackTestHook
+          number: 2
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+          iteration-field: Sprint
+          iteration: current
+          new-iteration: next
+          statuses: 'New'
 
       # - name: QA Sprint - Clear Sprint
-      #   uses: harvester/move-to-next-iteration@master
+      #   uses: rancher/gh-issue-mgr/move-to-next-iteration@main
       #   if: steps.check_sprint_build_required.outcome == 'success'
       #   with:
-      #     owner: harvester
-      #     number: 20
+      #     owner: JackTestHook
+      #     number: 1
       #     token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
       #     iteration-field: Sprint
       #     iteration: current
@@ -70,11 +72,11 @@ jobs:
       #     excluded-statuses: "In Review,Done"
 
       # - name: QA Sprint - Move to Next Sprint
-      #   uses: harvester/move-to-next-iteration@master
+      #   uses: rancher/gh-issue-mgr/move-to-next-iteration@main
       #   if: steps.check_sprint_build_required.outcome == 'success'
       #   with:
-      #     owner: harvester
-      #     number: 20
+      #     owner: JackTestHook
+      #     number: 1
       #     token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
       #     iteration-field: Sprint
       #     iteration: current
