@@ -11,7 +11,9 @@ jobs:
   harvester:
     runs-on: ubuntu-latest
     steps:
-
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
     - name: Is Harvester Member
       id: is-harvester-member
       uses: rancher/gh-issue-mgr/get-user-teams-membership@main
