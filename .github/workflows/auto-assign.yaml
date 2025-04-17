@@ -4,8 +4,8 @@ on:
   pull_request_target:
     types: [opened, ready_for_review]
 
-permissions:
-  pull-requests: write
+# permissions:
+#   pull-requests: write
 
 jobs:
   use-auto-assign:
