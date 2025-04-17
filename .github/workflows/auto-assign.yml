@@ -1,7 +1,8 @@
 name: Auto Assign
 
 on:
-  workflow_call:
+  pull_request_target:
+    types: [opened, ready_for_review]
 
 jobs:
   auto-assign:
