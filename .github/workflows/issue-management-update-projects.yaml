@@ -1,7 +1,7 @@
 name: "[Issue Management] Update Issue Status in Projects"
 on:
   issues:
-    types: [labeled, milestoned, reopened, closed]
+    types: [labeled, milestoned, reopened, closed, assigned, unassigned]
   issue_comment:
     types: [created, edited]
 
@@ -25,7 +25,7 @@ jobs:
       continue-on-error: true
       uses: rancher/gh-issue-mgr/get-user-teams-membership@main
       with:
-        username: ${{ github.event.issue.user.login }}
+        username: ${{ github.actor }}
         organization: harvester
         GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 
@@ -43,6 +43,58 @@ jobs:
       run: |
         ISSUE_NUMBER="${{ github.event.issue.number }}"
         gh issue edit "$ISSUE_NUMBER" --milestone "Planning"
+    
+    - uses: rancher/gh-issue-mgr/project-fields@main
+      id: fields
+      continue-on-error: false
+      if: steps.is-harvester-member.outcome == 'success'
+      with:
+        operation: get
+        fields: Status
+        github_token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+        project_url: ${{ env.HARVESTER_SPRINT_PROJECT_URL }}
+        resource_url: https://github.com/JackTestHook/test/issues/${{ github.event.issue.number }}
+
+    - name: Add Issue to Harvester Sprint Project
+      id: add-project
+      uses: actions/add-to-project@v1.0.2
+      if: ${{ steps.is-harvester-member.outcome == 'success' }}
+      with:
+        project-url: ${{ env.HARVESTER_SPRINT_PROJECT_URL }}
+        github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+
+    -  name: Update Project Item
+       if: ${{
+          steps.is-harvester-member.outcome == 'success' &&
+          steps.fields.outcome == 'success' &&
+          steps.add-project.outputs.itemId != ''
+          }}
+       run: |
+         ASSIGNEES='${{ toJSON(github.event.issue.assignees) }}'
+
+         if [[ ( "${{ steps.fields.outputs.values }}" == "New Issues" || "${{ steps.fields.outputs.values }}" == "" ) &&
+               $ASSIGNEES != "[]" ]]; then
+           echo "Updating to Backlog since it's assigned and status is New Issues or empty"
+           echo "field-values=Backlog" >> $GITHUB_ENV
+
+         elif [[ $ASSIGNEES == "[]" ]]; then
+           echo "Updating to New Issues since it's unassigned"
+           echo "field-values=New Issues" >> $GITHUB_ENV
+         fi
+
+    - name: Apply Project Update
+      if: ${{
+        steps.is-harvester-member.outcome == 'success' &&
+        steps.fields.outcome == 'success' &&
+        env.field-values != ''
+        }}
+      uses: rancher/gh-issue-mgr/update-project-fields@main
+      with:
+        project-url: ${{ env.HARVESTER_SPRINT_PROJECT_URL }}
+        github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+        item-id: ${{ steps.add-project.outputs.itemId }}
+        field-keys: Status
+        field-values: ${{ env.field-values }}
 
   community:
     runs-on: ubuntu-latest
