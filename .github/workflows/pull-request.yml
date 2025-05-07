@@ -4,12 +4,10 @@ on:
   pull_request_target:
 
 jobs:
-
   deploy:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    needs: prepare
     steps:
       - name: Set up Node.js 18
         uses: actions/setup-node@v4
@@ -21,10 +19,11 @@ jobs:
           npm install netlify-cli -g yarn
 
       - name: Deploy to Netlify
-        run: >
-          netlify deploy
-          --site ${{ secrets.NETLIFY_SITE_ID }}
-          --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          --message "Deploy from GitHub Action (pull-request: ${{ github.event.number }}, ${{ github.event.pull_request.head.sha }})"
-          --dir ./build
-          --json
+        continue-on-error: true
+        run: |
+          DEBUG=* netlify deploy --debug --site "${{ secrets.NETLIFY_SITE_ID }}" --auth "${{ secrets.NETLIFY_AUTH_TOKEN }}" --message "Deploy from GitHub Action (pull-request: ${{ github.event.number }}, ${{ github.event.pull_request.head.sha }})" --dir ./build
+      
+      # - name: Check
+      #   run: >
+      #     cat deploy_output.json
+          
