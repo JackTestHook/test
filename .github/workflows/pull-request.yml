@@ -21,7 +21,9 @@ jobs:
       - name: Deploy to Netlify
         continue-on-error: true
         run: |
-          DEBUG=* netlify deploy --debug --site "${{ secrets.NETLIFY_SITE_ID }}" --auth "${{ secrets.NETLIFY_AUTH_TOKEN }}" --message "Deploy from GitHub Action (pull-request: ${{ github.event.number }}, ${{ github.event.pull_request.head.sha }})" --dir ./build
+          mkdir build
+          echo "test" > build/index.html
+          DEBUG=* netlify deploy --no-build --debug --site "${{ secrets.NETLIFY_SITE_ID }}" --auth "${{ secrets.NETLIFY_AUTH_TOKEN }}" --message "Deploy from GitHub Action (pull-request: ${{ github.event.number }}, ${{ github.event.pull_request.head.sha }})" --dir ./build
       
       # - name: Check
       #   run: >
