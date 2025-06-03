@@ -38,18 +38,9 @@ jobs:
         ISSUE_NUMBERS=$(echo "$BODY" | grep -oE 'JackTestHook/test#([0-9]+)' | cut -d'#' -f2)
         ISSUE_NUMBERS_URL=$(echo "$BODY" | grep -oE 'https://github.com/JackTestHook/test/issues/[0-9]+' | awk -F'/' '{print $NF}')
         ALL_ISSUES=$(echo -e "$ISSUE_NUMBERS\n$ISSUE_NUMBERS_URL" | grep -E '^[0-9]+$' | sort -u)
-
-        # Validate each number is an issue (not a PR)
-        VALID_ISSUES=""
-        for issue in $ALL_ISSUES; do
-          IS_PR=$(gh issue view "$issue" --repo JackTestHook/test --json pullRequest -q '.pullRequest')
-          if [[ "$IS_PR" == "null" ]]; then
-            VALID_ISSUES="$VALID_ISSUES $issue"
-          fi
-        done
-
-        VALID_ISSUES=$(echo $VALID_ISSUES | xargs) # trim
-        echo "ORIGINAL_ISSUE_NUMBER=$VALID_ISSUES" >> $GITHUB_ENV
+        
+        ORIGINAL_ISSUE_NUMBER=$(echo $ALL_ISSUES | xargs) # trim
+        echo "ORIGINAL_ISSUE_NUMBER=$ORIGINAL_ISSUE_NUMBER" >> $GITHUB_ENV
 
     - name: Link the PR with the backport issue
       if: ${{ env.BACKPORT == 'true' && env.ORIGINAL_ISSUE_NUMBER != '' }}
