@@ -55,9 +55,7 @@ jobs:
             search_title="[backport ${BRANCH}] ${issue_title}"
             echo "Searching for backport issue with title: '${search_title}'"
 
-            backport_issue_number=$(
-              gh issue list --repo JackTestHook/test --state open --search '"${search_title}"' --json number --jq ".[].number"
-            )
+            backport_issue_number=$(gh issue list --repo JackTestHook/test --state open --search "${search_title}" --json number --jq ".[].number")
 
             if [[ -n "$backport_issue_number" ]]; then
               echo "Found backport issue JackTestHook/test#${backport_issue_number}"
