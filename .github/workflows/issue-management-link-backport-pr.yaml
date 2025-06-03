@@ -7,6 +7,9 @@ on:
     - master
     - "v*"
 
+env:
+  REPO_NAME: JackTestHook/test
+
 jobs:
   check-backport:
     runs-on: ubuntu-latest
@@ -34,8 +37,8 @@ jobs:
 
         # Extract issue numbers from PR body (support both formats)
         BODY="${{ github.event.pull_request.body }}"
-        ISSUE_NUMBERS=$(echo "$BODY" | grep -oE 'JackTestHook/test#([0-9]+)' | cut -d'#' -f2)
-        ISSUE_NUMBERS_URL=$(echo "$BODY" | grep -oE 'https://github.com/JackTestHook/test/issues/[0-9]+' | awk -F'/' '{print $NF}')
+        ISSUE_NUMBERS=$(echo "$BODY" | grep -oE "${REPO_NAME}#([0-9]+)" | cut -d'#' -f2)
+        ISSUE_NUMBERS_URL=$(echo "$BODY" | grep -oE "https://github.com/${REPO_NAME}/issues/[0-9]+" | awk -F'/' '{print $NF}')
         ALL_ISSUES=$(echo -e "$ISSUE_NUMBERS\n$ISSUE_NUMBERS_URL" | grep -E '^[0-9]+$' | sort -u)
         
         ORIGINAL_ISSUE_NUMBER=$(echo $ALL_ISSUES | xargs) # trim
@@ -48,19 +51,25 @@ jobs:
         GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
       run: |
         for issue_number in "${{ env.ORIGINAL_ISSUE_NUMBER }}"; do
-          echo "Found source issue JackTestHook/test#${issue_number}"
-          issue_title=$(gh issue view "$issue_number" --repo JackTestHook/test --json title --jq ".title")
+          echo "Found source issue ${REPO_NAME}#${issue_number}"
+          issue_title=$(gh issue view "$issue_number" --json title --jq ".title")
 
           if [[ -n "$issue_number" && -n "$issue_title" ]]; then
             search_title="[backport ${BRANCH}] ${issue_title}"
             echo "Searching for backport issue with title: '${search_title}'"
 
-            backport_issue_number=$(gh issue list --repo JackTestHook/test --state open --search "${search_title}" --json number --jq ".[].number")
+            backport_issue_number=$(gh issue list --state open --search "${search_title}" --json number --jq ".[].number")
 
             if [[ -n "$backport_issue_number" ]]; then
-              echo "Found backport issue JackTestHook/test#${backport_issue_number}"
-              echo "Linking backport issue JackTestHook/test#${backport_issue_number}"
-              gh issue comment --repo JackTestHook/test "${backport_issue_number}" --body "Backport PR: ${{ github.event.pull_request.html_url }}"
+              echo "Found backport issue ${REPO_NAME}#${backport_issue_number}"
+              echo "Linking backport issue ${REPO_NAME}#${backport_issue_number}"
+
+              # comment on the backport issue
+              gh issue comment "${backport_issue_number}" --body "Backport PR: ${{ github.event.pull_request.html_url }}"
+
+              # comment on the PR
+              backport_issue_url=$(gh issue view "${backport_issue_number}" --json url --jq ".url")
+              gh pr comment "${{ github.event.pull_request.number }}" --body "Backport issue: ${backport_issue_url}"
               continue
             fi
           fi
