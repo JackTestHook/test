@@ -2,6 +2,11 @@ name: "Manual Echo EOF Example"
 
 on:
   workflow_dispatch:
+    inputs:
+      name:
+        description: "Name of the workflow"
+        required: true
+        default: "Echo EOF Example"
   
 jobs:
   echo-eof-example:
@@ -21,7 +26,7 @@ jobs:
           EOF
 
           A=$(cat <<'EOF'
-          test`!@#$%^&*()"'
+          "${{ github.event.inputs.name }}"
           EOF
           )
 
