@@ -1,0 +1,41 @@
+name: "Manual Echo EOF Example"
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  echo-eof-example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Echo EOF Example
+        env:
+          GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+        run: |
+          cat <<EOF
+          This is a multi-line
+          echo example using EOF.
+          You can put any content here.
+          EOF
+
+          A=$(cat <<'EOF'
+          test`!@#$%^&*()"'
+          EOF
+          )
+
+          B=$(cat <<'EOF'
+          This is a multi-line'"`019#!@_)!*_`
+          echo example using EOF.
+          You can put any content here.
+          EOF
+          )
+
+          echo "A: $A"
+          echo "============="
+          echo "B: $B"
+          echo "============="
+
+          BACKPORT_ISSUE=$(gh issue list --search "$A" --json number --jq '.[0].number')
+          echo "BACKPORT_ISSUE: $BACKPORT_ISSUE"
