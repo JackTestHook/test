@@ -45,6 +45,38 @@ jobs:
         echo "fromJSON(steps.is-harvester-member.outputs.teams)[0] == null: ${{ fromJSON(steps.is-harvester-member.outputs.teams)[0] == null }}"
         echo "fromJSON(steps.is-suse-member.outputs.teams)[0] != null: ${{ fromJSON(steps.is-suse-member.outputs.teams)[0] != null }}"
     
+    - name: test isTeamMember 1
+      if : ${{steps.is-harvester-member.outputs.isTeamMember == 'true'}}
+      run: |
+        echo "test isTeamMember 1"
+
+    - name: test isTeamMember 2 
+      if : ${{steps.is-harvester-member.outputs.isTeamMember == true }}
+      run: |
+        echo "test isTeamMember 2"
+
+    - name: test isTeamMember 3
+      if : ${{steps.is-harvester-member.outputs.isTeamMember == 'false'}}
+      run: |
+        echo "test isTeamMember 3"
+
+    - name: test isTeamMember 4
+      if : ${{steps.is-harvester-member.outputs.isTeamMember == false}}
+      run: |
+        echo "test isTeamMember 4"
+
+    - name: test isTeamMember 5
+      if : |
+        steps.is-harvester-member.outputs.isTeamMember == 'false'
+      run: |
+        echo "test isTeamMember 5"
+    
+    - name: test isTeamMember 6
+      if : |
+        steps.is-harvester-member.outputs.isTeamMember == false
+      run: |
+        echo "test isTeamMember 6"
+
     - name: test condition
       if: ${{
         fromJSON(steps.is-suse-member.outputs.teams)[0] != null &&
